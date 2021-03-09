@@ -101,6 +101,7 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
 });
 
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
+  const { id } = request.params;
   const { todos } = request.user;
 
   const todoFound = todos.find((todo) => todo.id === id);
@@ -110,8 +111,10 @@ app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
   }
 
   const todosAfterDelete = todos.filter((todo) => todo.id !== id);
+  todos.length = 0;
+  todos.push(...todosAfterDelete);
 
-  return response.status(204).json(todosAfterDelete);
+  return response.status(204).json();
 });
 
 module.exports = app;
