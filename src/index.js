@@ -72,10 +72,11 @@ app.post("/todos", checksExistsUserAccount, (request, response) => {
 app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
   const { id } = request.params;
   const { title, deadline } = request.body;
+  const { todos } = request.user;
 
   const todoFound = todos.find((todo) => todo.id === id);
 
-  if (todoFound) {
+  if (!todoFound) {
     return response.status(404).json({ error: "Todo not found" });
   }
 
