@@ -94,9 +94,9 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
   const { todos } = request.user;
 
-  const todos = todos.filter((todo) => todo.id !== id);
+  const todosAfterDelete = todos.filter((todo) => todo.id !== id);
 
-  return response.status(200).json(todos);
+  return response.status(200).json(todosAfterDelete);
 });
 
 module.exports = app;
