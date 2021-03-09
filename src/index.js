@@ -66,7 +66,7 @@ app.post("/todos", checksExistsUserAccount, (request, response) => {
 
   user.todos.push(todo);
 
-  return response.status(200).json(user.todos);
+  return response.status(201).json(user.todos);
 });
 
 app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
@@ -76,7 +76,7 @@ app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
   const todoFound = todos.find((todo) => todo.id === id);
 
   if (todoFound) {
-    return response.status(400).json({ error: "Todo not found" });
+    return response.status(404).json({ error: "Todo not found" });
   }
 
   const todoDone = { ...todoFound, title, deadline };
@@ -91,7 +91,7 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
   const todoFound = todos.find((todo) => todo.id === id);
 
   if (todoFound) {
-    return response.status(400).json({ error: "Todo not found" });
+    return response.status(404).json({ error: "Todo not found" });
   }
 
   const todoDone = { ...todoFound, done: true };
@@ -102,9 +102,15 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
   const { todos } = request.user;
 
+  const todoFound = todos.find((todo) => todo.id === id);
+
+  if (!todoFound) {
+    return response.status(404).json({ error: "Todo not found" });
+  }
+
   const todosAfterDelete = todos.filter((todo) => todo.id !== id);
 
-  return response.status(200).json(todosAfterDelete);
+  return response.status(204).json(todosAfterDelete);
 });
 
 module.exports = app;
